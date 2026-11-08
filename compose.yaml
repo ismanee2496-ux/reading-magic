@@ -1,0 +1,13 @@
+services:
+  reading:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATA_DIR: /data
+      COOKIE_SECURE: ${COOKIE_SECURE:-0}
+    volumes:
+      - reading-data:/data
+    restart: unless-stopped
+volumes:
+  reading-data:

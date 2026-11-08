@@ -1,0 +1,10 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN useradd -u 10001 appuser && mkdir -p /data/uploads && chown -R appuser:appuser /data /app
+USER appuser
+ENV DATA_DIR=/data COOKIE_SECURE=1 PORT=8000
+EXPOSE 8000
+CMD ["sh","-c","exec gunicorn --workers 1 --threads 8 --bind 0.0.0.0:${PORT:-8000} --timeout 60 app:app"]
